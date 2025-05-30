@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/static/css/main.98b5e9b0.css",
-    "main.js": "/static/js/main.11d2c8da.js",
-    "static/js/239.6e0b9c23.chunk.js": "/static/js/239.6e0b9c23.chunk.js",
-    "static/js/213.3088029c.chunk.js": "/static/js/213.3088029c.chunk.js",
-    "static/js/455.b93efc79.chunk.js": "/static/js/455.b93efc79.chunk.js",
-    "static/media/award.jpg": "/static/media/award.5718a58712773c6e4de1.jpg",
-    "static/media/red.jpg": "/static/media/red.66c6826500fcb2323986.jpg",
-    "static/media/home-banner-nurse.jpg": "/static/media/home-banner-nurse.4187a4847bd8808a8794.jpg",
-    "static/media/logo-1.png": "/static/media/logo-1.c2a307f96ab58e7da2cc.png",
-    "index.html": "/index.html",
-    "main.98b5e9b0.css.map": "/static/css/main.98b5e9b0.css.map",
-    "main.11d2c8da.js.map": "/static/js/main.11d2c8da.js.map",
-    "239.6e0b9c23.chunk.js.map": "/static/js/239.6e0b9c23.chunk.js.map",
-    "213.3088029c.chunk.js.map": "/static/js/213.3088029c.chunk.js.map",
-    "455.b93efc79.chunk.js.map": "/static/js/455.b93efc79.chunk.js.map"
+    "main.css": "/neuraq-care-mkba-og-001/static/css/main.ac656a49.css",
+    "main.js": "/neuraq-care-mkba-og-001/static/js/main.e211da4f.js",
+    "static/js/239.6e0b9c23.chunk.js": "/neuraq-care-mkba-og-001/static/js/239.6e0b9c23.chunk.js",
+    "static/js/213.3088029c.chunk.js": "/neuraq-care-mkba-og-001/static/js/213.3088029c.chunk.js",
+    "static/js/455.b93efc79.chunk.js": "/neuraq-care-mkba-og-001/static/js/455.b93efc79.chunk.js",
+    "static/media/award.jpg": "/neuraq-care-mkba-og-001/static/media/award.5718a58712773c6e4de1.jpg",
+    "static/media/red.jpg": "/neuraq-care-mkba-og-001/static/media/red.66c6826500fcb2323986.jpg",
+    "static/media/home-banner-nurse.jpg": "/neuraq-care-mkba-og-001/static/media/home-banner-nurse.4187a4847bd8808a8794.jpg",
+    "static/media/logo-1.png": "/neuraq-care-mkba-og-001/static/media/logo-1.c2a307f96ab58e7da2cc.png",
+    "index.html": "/neuraq-care-mkba-og-001/index.html",
+    "main.ac656a49.css.map": "/neuraq-care-mkba-og-001/static/css/main.ac656a49.css.map",
+    "main.e211da4f.js.map": "/neuraq-care-mkba-og-001/static/js/main.e211da4f.js.map",
+    "239.6e0b9c23.chunk.js.map": "/neuraq-care-mkba-og-001/static/js/239.6e0b9c23.chunk.js.map",
+    "213.3088029c.chunk.js.map": "/neuraq-care-mkba-og-001/static/js/213.3088029c.chunk.js.map",
+    "455.b93efc79.chunk.js.map": "/neuraq-care-mkba-og-001/static/js/455.b93efc79.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.98b5e9b0.css",
-    "static/js/main.11d2c8da.js"
+    "static/css/main.ac656a49.css",
+    "static/js/main.e211da4f.js"
   ]
 }
