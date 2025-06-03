@@ -138,7 +138,7 @@ function Home() {
       {/* Banner Section */}
       <div className="HomeBanner">
         <div className="hero-name">
-        <h1 style={{ color: "#1e506b" }} className="">NURSES HOME</h1>
+        <h1 style={{ color: "#1e506b" }} className="">Dashboard</h1>
         </div>
         {/* <div className="HomeBannerButtons">
           <Link to="/main/addpt" className="HomeBannerButton">
