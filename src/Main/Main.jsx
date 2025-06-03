@@ -29,6 +29,7 @@ import UpdateINVESTIGATION from "../Forms/UpdateINVESTIGATION";
 import UpdatePROGRESSION from "../Forms/UpdatePROGRESSION";
 import ReportDetailsDHC from "../PatientDetials.jsx/ReportDetailsDHC";
 import ReportDetailsVHC from "../PatientDetials.jsx/ReportDetailsVHC";
+import AllRep from "../PatientDetials.jsx/AllRep";
 import ReportDetailsPROGRESSION from "../PatientDetials.jsx/ReportDetailsPROGRESSION";
 import ReportDetailsINVESTIGATION from "../PatientDetials.jsx/ReportDetailsINVESTIGATION";
 import ReportDetailsSOCIAL from "../PatientDetials.jsx/ReportDetailsSOCIAL";
@@ -59,6 +60,7 @@ function Main({ isAuthenticated, isNurse }) {
           <Route path="/addpt" element={<AddPatient />} />
           <Route path="/fmtree/:patientId" element={<FamilyTree />} />
           <Route path="/allrepots" element={<AllReportsPage />} />
+          <Route path="/allrep" element={<AllRep />} />
           <Route path="/medicine-list" element={<MedicineList />} />
           <Route path="/divya-list" element={<Divya />} />
           <Route path="/auto-list" element={<Auto />} />

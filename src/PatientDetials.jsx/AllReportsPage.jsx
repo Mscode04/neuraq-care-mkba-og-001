@@ -1,131 +1,180 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { db } from "../Firebase/config";
-import { collection, getDocs, query, where, doc, deleteDoc } from "firebase/firestore";
+import { 
+  collection, 
+  getDocs, 
+  query, 
+  where, 
+  doc, 
+  deleteDoc, 
+  orderBy, 
+  limit,
+  startAfter
+} from "firebase/firestore";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./AllReportsPage.css";
+import { ExclamationTriangleFill } from 'react-bootstrap-icons';
 
 const AllReportsPage = () => {
   const [reports, setReports] = useState([]);
+  const [showMessage, setShowMessage] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
   const [nameFilter, setNameFilter] = useState("");
   const [formTypeFilter, setFormTypeFilter] = useState("");
   const [addressFilter, setAddressFilter] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [reportToDelete, setReportToDelete] = useState(null);
   const [pin, setPin] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc"); // New state for sorting order
+  const [hasMore, setHasMore] = useState(true);
+  const lastDocRef = useRef(null);
 
-  const reportsPerPage = 40;
+  const reportsPerPage = 20; // Reduced for better performance
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchReports = async () => {
-      try {
+  const fetchReports = async (loadMore = false) => {
+    try {
+      if (loadMore) {
+        setLoadingMore(true);
+      } else {
         setLoading(true);
-        setError(null);
-  
-        const reportsRef = collection(db, "Reports");
-        let q = query(reportsRef);
-  
-        // Only apply formType filter (since it's exact match)
-        if (formTypeFilter) {
-          q = query(q, where("formType", "==", formTypeFilter));
-        }
-  
-        const querySnapshot = await getDocs(q);
-        let reportsData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-  
-        // Client-side filtering for name and address (case-insensitive)
-        if (nameFilter) {
-          reportsData = reportsData.filter((report) =>
-            report.name?.toLowerCase().includes(nameFilter.toLowerCase())
-          );
-        }
-        if (addressFilter) {
-          reportsData = reportsData.filter((report) =>
-            report.address?.toLowerCase().includes(addressFilter.toLowerCase())
-          );
-        }
-  
-        // Date filtering (same as before)
-        if (startDate || endDate) {
-          const startDateObj = startDate ? new Date(startDate) : null;
-          const endDateObj = endDate ? new Date(endDate) : null;
-          if (endDateObj) {
-            endDateObj.setHours(23, 59, 59, 999);
-          }
-  
-          reportsData = reportsData.filter((report) => {
-            const submittedAtDate = new Date(report.submittedAt);
-            if (startDateObj && submittedAtDate < startDateObj) return false;
-            if (endDateObj && submittedAtDate > endDateObj) return false;
-            return true;
-          });
-        }
-  
-        // Sorting (same as before)
-        reportsData.sort((a, b) => {
-          const dateA = new Date(a.submittedAt);
-          const dateB = new Date(b.submittedAt);
-          return sortOrder === "desc" ? dateA - dateB : dateB - dateA;
-        });
-  
+        setReports([]);
+        lastDocRef.current = null;
+        setHasMore(true);
+      }
+
+      setError(null);
+      const reportsRef = collection(db, "Reports");
+      
+      // Base query with sorting (newest first)
+      let q = query(
+        reportsRef,
+        orderBy("submittedAt", "desc"),
+        limit(reportsPerPage)
+      );
+
+      // Apply cursor if loading more
+      if (loadMore && lastDocRef.current) {
+        q = query(q, startAfter(lastDocRef.current));
+      }
+
+      // Apply formType filter if selected
+      if (formTypeFilter) {
+        q = query(q, where("formType", "==", formTypeFilter));
+      }
+
+      const querySnapshot = await getDocs(q);
+      
+      // Update the last visible document reference
+      if (querySnapshot.docs.length > 0) {
+        lastDocRef.current = querySnapshot.docs[querySnapshot.docs.length - 1];
+      }
+
+      // Check if we've reached the end
+      if (querySnapshot.docs.length < reportsPerPage) {
+        setHasMore(false);
+      }
+
+      let reportsData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      // Apply client-side filters
+      reportsData = applyClientFilters(reportsData);
+
+      // Merge new reports when loading more
+      if (loadMore) {
+        setReports(prevReports => [...prevReports, ...reportsData]);
+      } else {
         setReports(reportsData);
-      } catch (error) {
-        console.error("Error fetching reports: ", error);
-        setError("Failed to load reports. Please try again later.");
-      } finally {
+      }
+    } catch (error) {
+      console.error("Error fetching reports: ", error);
+      setError("Failed to load reports. Please try again later.");
+    } finally {
+      if (loadMore) {
+        setLoadingMore(false);
+      } else {
         setLoading(false);
       }
-    };
-  
+    }
+  };
+
+  const applyClientFilters = (data) => {
+    let filteredData = [...data];
+    
+    // Name filter
+    if (nameFilter) {
+      filteredData = filteredData.filter((report) =>
+        report.name?.toLowerCase().includes(nameFilter.toLowerCase())
+      );
+    }
+    
+    // Address filter
+    if (addressFilter) {
+      filteredData = filteredData.filter((report) =>
+        report.address?.toLowerCase().includes(addressFilter.toLowerCase())
+      );
+    }
+    
+    // Date filtering
+    if (startDate || endDate) {
+      const startDateObj = startDate ? new Date(startDate) : null;
+      const endDateObj = endDate ? new Date(endDate) : null;
+      if (endDateObj) endDateObj.setHours(23, 59, 59, 999);
+
+      filteredData = filteredData.filter((report) => {
+        if (!report.submittedAt) return false;
+        const submittedAtDate = new Date(report.submittedAt);
+        if (startDateObj && submittedAtDate < startDateObj) return false;
+        if (endDateObj && submittedAtDate > endDateObj) return false;
+        return true;
+      });
+    }
+    
+    return filteredData;
+  };
+
+  // Initial load
+  useEffect(() => {
     fetchReports();
-  }, [nameFilter, formTypeFilter, addressFilter, startDate, endDate, sortOrder]);
+  }, []);
+
+  // Refetch when filters change (except name/address which are client-side)
+  useEffect(() => {
+    if (!loading) {
+      fetchReports();
+    }
+  }, [formTypeFilter, startDate, endDate]);
+
   const handleBackClick = () => {
     navigate(-1);
   };
 
   const getReportDetailsRoute = (formType, reportId) => {
-    switch (formType) {
-      case "NHC":
-        return `/main/reportsdetailnhc/${reportId}`;
-      case "NHC(E)":
-        return `/main/reportsdetailnhce/${reportId}`;
-      case "DHC":
-        return `/main/report-details-dhc/${reportId}`;
-      case "PROGRESSION REPORT":
-        return `/main/report-details-progression/${reportId}`;
-      case "SOCIAL REPORT":
-        return `/main/report-details-social/${reportId}`;
-      case "VHC":
-        return `/main/report-details-vhc/${reportId}`;
-      case "GVHC":
-        return `/main/report-details-vhc/${reportId}`;
-      case "INVESTIGATION":
-        return `/main/report-details-investigation/${reportId}`;
-      case "DEATH":
-        return `/main/report-details-death/${reportId}`;
-      default:
-        return `/main/report-details-default/${reportId}`;
-    }
+    const routes = {
+      "NHC": `/main/reportsdetailnhc/${reportId}`,
+      "NHC(E)": `/main/reportsdetailnhce/${reportId}`,
+      "DHC": `/main/report-details-dhc/${reportId}`,
+      "PROGRESSION REPORT": `/main/report-details-progression/${reportId}`,
+      "SOCIAL REPORT": `/main/report-details-social/${reportId}`,
+      "VHC": `/main/report-details-vhc/${reportId}`,
+      "GVHC": `/main/report-details-vhc/${reportId}`,
+      "INVESTIGATION": `/main/report-details-investigation/${reportId}`,
+      "DEATH": `/main/report-details-death/${reportId}`
+    };
+    return routes[formType] || `/main/report-details-default/${reportId}`;
   };
 
   const handleDeleteClick = (reportId) => {
     setReportToDelete(reportId);
     setShowConfirmation(true);
-  };
-
-  const handlePinChange = (e) => {
-    setPin(e.target.value);
   };
 
   const handleConfirmDelete = async () => {
@@ -145,17 +194,32 @@ const AllReportsPage = () => {
     }
   };
 
-  const handleCancelDelete = () => {
-    setShowConfirmation(false);
-    setPin("");
+  const handleLoadMore = () => {
+    if (hasMore && !loadingMore) {
+      fetchReports(true);
+    }
   };
 
-  // Pagination logic
-  const indexOfLastReport = currentPage * reportsPerPage;
-  const indexOfFirstReport = indexOfLastReport - reportsPerPage;
-  const currentReports = reports.slice(indexOfFirstReport, indexOfLastReport);
+  // Apply client-side filters to existing data when they change
+  useEffect(() => {
+    if (!loading && (nameFilter || addressFilter)) {
+      const filteredReports = applyClientFilters(reports);
+      setReports(filteredReports);
+    }
+  }, [nameFilter, addressFilter]);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handleClick = () => {
+  setShowMessage(true);
+};
+
+const handleContinue = () => {
+  navigate('/main/allrep');
+};
+
+const handleExit = () => {
+  setShowMessage(false);
+};
 
   return (
     <div className="AllRep-container">
@@ -175,23 +239,23 @@ const AllReportsPage = () => {
       <button onClick={handleBackClick} className="AllRep-back-button">
         &larr; Back
       </button>
-      <h2 className="AllRep-heading">All Reports   ({reports.length})</h2>
+      <h2 className="AllRep-heading">All Reports ({reports.length})</h2>
 
       {/* Filters */}
       <div className="AllRep-filters-container">
-        <input
+        {/* <input
           type="text"
           value={nameFilter}
           onChange={(e) => setNameFilter(e.target.value)}
           placeholder="Search by Name"
           className="AllRep-filter-input"
-        />
-        <select
+        /> */}
+        {/* <select
           value={formTypeFilter}
           onChange={(e) => setFormTypeFilter(e.target.value)}
           className="AllRep-filter-select"
         >
-          <option value="">Select Form Type</option>
+          <option value="">All Form Types</option>
           <option value="NHC">NHC</option>
           <option value="NHC(E)">NHC(E)</option>
           <option value="DHC">DHC</option>
@@ -201,14 +265,15 @@ const AllReportsPage = () => {
           <option value="GVHC">GVHC</option>
           <option value="INVESTIGATION">Investigation</option>
           <option value="DEATH">Death</option>
-        </select>
-        <input
+        </select> */}
+        
+        {/* <input
           type="text"
           value={addressFilter}
           onChange={(e) => setAddressFilter(e.target.value)}
           placeholder="Search by Address"
           className="AllRep-filter-input"
-        />
+        /> */}
         <input
           type="date"
           value={startDate}
@@ -223,15 +288,26 @@ const AllReportsPage = () => {
           placeholder="End Date"
           className="AllRep-filter-input"
         />
-        {/* Sorting dropdown */}
-        <select
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value)}
-          className="AllRep-filter-select"
-        >
-          <option value="desc">Descending</option>
-          <option value="asc">Ascending</option>
-        </select>
+<button className="btn btn-dark p-2 m-2" onClick={handleClick}>
+    Full Load
+  </button>
+
+  {showMessage && (
+    <div className="alert alert-warning d-flex align-items-center mt-2" role="alert">
+      <ExclamationTriangleFill className="me-2" />
+      <div>
+        This is fully report loading. Your Firebase usage may increase.
+        <div className="mt-2">
+          <button className="btn btn-success btn-sm me-2" onClick={handleContinue}>
+            Continue
+          </button>
+          <button className="btn btn-secondary btn-sm" onClick={handleExit}>
+            Exit
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
       </div>
 
       {loading ? (
@@ -241,21 +317,24 @@ const AllReportsPage = () => {
             alt="Loading..."
             className="loading-image"
           />
+          <p>Loading initial reports...</p>
         </div>
       ) : error ? (
         <p className="AllRep-error">{error}</p>
       ) : reports.length === 0 ? (
-        <p className="AllRep-no-reports">No reports found.</p>
+        <p className="AllRep-no-reports">No reports found matching your criteria.</p>
       ) : (
         <>
           <div className="AllRep-reports-list">
-            {currentReports.map((report) => (
+            {reports.map((report) => (
               <div key={report.id} className="AllRep-report-item">
                 <Link
                   to={getReportDetailsRoute(report.formType, report.id)}
                   className="AllRep-report-link"
                 >
-                  <h3 className="AllRep-report-title">{report.formType || "Report Title"} : {report.name || "No Name"}</h3>
+                  <h3 className="AllRep-report-title">
+                    {report.formType || "Report"} : {report.name || "No Name"}
+                  </h3>
                   <p className="AllRep-report-date">
                     {report.submittedAt
                       ? new Date(report.submittedAt).toLocaleString("en-US", {
@@ -271,10 +350,13 @@ const AllReportsPage = () => {
                       : "No date available"}
                   </p>
                   <p className="AllRep-report-name">{report.name || "No Name"}</p>
-                  <p className="AllRep-report-name">REPORTED BY: {report.team1 || "NOT MENTION"}</p>
-
-                  <p className="AllRep-report-name"> {report.registernumber}</p>
-                  <p className="AllRep-report-address">{report.address || "No Address"}</p>
+                  <p className="AllRep-report-name">
+                    REPORTED BY: {report.team1 || "NOT MENTIONED"}
+                  </p>
+                  <p className="AllRep-report-name">{report.registernumber}</p>
+                  <p className="AllRep-report-address">
+                    {report.address || "No Address"}
+                  </p>
                 </Link>
                 <button
                   onClick={() => handleDeleteClick(report.id)}
@@ -286,27 +368,27 @@ const AllReportsPage = () => {
             ))}
           </div>
 
-          {/* Pagination */}
-          <div className="AllRep-pagination">
-            <button
-              onClick={() => paginate(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="AllRep-pagination-button"
-            >
-              Previous
-            </button>
-            <button
-              onClick={() => paginate(currentPage + 1)}
-              disabled={indexOfLastReport >= reports.length}
-              className="AllRep-pagination-button"
-            >
-              Next
-            </button>
-          </div>
+          {/* Load More button */}
+          {hasMore && (
+            <div className="AllRep-load-more ">
+              <button
+                onClick={handleLoadMore}
+                disabled={loadingMore}
+                className="AllRep-load-more-button btn-dark p-3 m-3"
+              >
+                {loadingMore ? (
+                  <span>Loading...</span>
+                ) : (
+                  <span className="">Load More Reports</span>
+                )}
+              </button>
+              
+            </div>
+          )}
         </>
       )}
 
-      {showConfirmation && (
+      {/* {showConfirmation && (
         <div className="AllRep-confirmation-box">
           <p>Enter PIN to delete the report:</p>
           <input
@@ -316,14 +398,16 @@ const AllReportsPage = () => {
             placeholder="Enter PIN"
             className="AllRep-pin-input"
           />
-          <button onClick={handleConfirmDelete} className="AllRep-confirm-button">
-            Confirm
-          </button>
-          <button onClick={handleCancelDelete} className="AllRep-cancel-button">
-            Cancel
-          </button>
+          <div className="AllRep-confirmation-buttons">
+            <button onClick={handleConfirmDelete} className="AllRep-confirm-button">
+              Confirm
+            </button>
+            <button onClick={handleCancelDelete} className="AllRep-cancel-button">
+              Cancel
+            </button>
+          </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
