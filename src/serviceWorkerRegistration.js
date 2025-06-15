@@ -4,6 +4,8 @@ const isLocalhost = Boolean(
   window.location.hostname.match(/^127(\.\d{1,3}){3}$/) // 127.0.0.1
 );
 
+
+
 // Add support for your custom domain
 const isCustomDomain = window.location.hostname === 'pmkba.neuraq.in';
 
