@@ -7,7 +7,8 @@ const isLocalhost = Boolean(
 
 
 // Add support for your custom domain
-const isCustomDomain = window.location.hostname === 'pmkba.neuraq.in';
+// const isCustomDomain = window.location.hostname === 'pmkba.neuraq.in';
+
 
 export function register(config) {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
