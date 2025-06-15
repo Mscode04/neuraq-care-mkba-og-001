@@ -1,38 +1,34 @@
+
+
 const isLocalhost = Boolean(
-  window.location.hostname === 'localhost' || // IPv4 localhost
-  window.location.hostname === '[::1]' ||     // IPv6 localhost
-  window.location.hostname.match(/^127(\.\d{1,3}){3}$/) // 127.0.0.1
+  window.location.hostname === 'localhost' || // Check for localhost
+  window.location.hostname === '[::1]' || // Check for IPv6 localhost
+  window.location.hostname.match(/^127(\.\d{1,3}){3}$/) // Check for IPv4 localhost
 );
-
-
-
-// Add support for your custom domain
-// const isCustomDomain = window.location.hostname === 'pmkba.neuraq.in';
-
 
 export function register(config) {
   if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
-
     if (publicUrl.origin !== window.location.origin) {
-      // Service worker won't work if PUBLIC_URL is on a different origin
+      // The service worker won't work if PUBLIC_URL is on a different origin
       return;
     }
 
     window.addEventListener('load', () => {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
 
-      if (isLocalhost || isCustomDomain) {
-        // Validate service worker for localhost or custom domain
+      if (isLocalhost) {
+        // Check if the service worker exists on localhost
         checkValidServiceWorker(swUrl, config);
 
+        // Log a message for localhost
         navigator.serviceWorker.ready.then(() => {
           console.log(
-            'This web app is being served cache-first by a service worker (localhost or custom domain).'
+            'This web app is being served cache-first by a service worker.'
           );
         });
       } else {
-        // Register service worker normally in production
+        // Register the service worker for production
         registerValidSW(swUrl, config);
       }
     });
@@ -51,13 +47,13 @@ function registerValidSW(swUrl, config) {
         installingWorker.onstatechange = () => {
           if (installingWorker.state === 'installed') {
             if (navigator.serviceWorker.controller) {
-              // New content available
+              // New content is available; force refresh
               console.log('New content is available; please refresh.');
               if (config && config.onUpdate) {
                 config.onUpdate(registration);
               }
             } else {
-              // Content cached for offline use
+              // Content is cached for offline use
               console.log('Content is cached for offline use.');
               if (config && config.onSuccess) {
                 config.onSuccess(registration);
@@ -75,19 +71,18 @@ function registerValidSW(swUrl, config) {
 function checkValidServiceWorker(swUrl, config) {
   fetch(swUrl)
     .then((response) => {
-      const contentType = response.headers.get('content-type');
       if (
         response.status === 404 ||
-        (contentType && contentType.indexOf('javascript') === -1)
+        response.headers.get('content-type').indexOf('javascript') === -1
       ) {
-        // No service worker found or incorrect type
+        // No service worker found or invalid content type
         navigator.serviceWorker.ready.then((registration) => {
           registration.unregister().then(() => {
             window.location.reload();
           });
         });
       } else {
-        // Valid service worker found
+        // Service worker found; proceed with registration
         registerValidSW(swUrl, config);
       }
     })
@@ -103,3 +98,5 @@ export function unregister() {
     });
   }
 }
+
+
