@@ -442,6 +442,7 @@ const exportToPrintshort = (report) => {
     ["Patient Currently", report.patientCurrently || "N/A"],
     ["Activity Score", report.activityScore || "N/A"],
     ["Add More General", report.addmoregeneral || "N/A"],
+    ["Add More General", report.financialsituation || "N/A"],
   ]);
   printWindow.document.write('</div>');
 

@@ -573,6 +573,15 @@ const DHC = () => {
           </select>
         </label>
         <label>
+          Financial situation (സാമ്പത്തിക അവസ്ഥ):
+          <textarea
+            name="financialsituation"
+            value={formData.financialsituation}
+            onChange={handleChange}
+            rows="1"
+          />
+        </label>
+        <label>
                 Additional Notes About General Matters:
   <textarea
     name="addmoregeneral"

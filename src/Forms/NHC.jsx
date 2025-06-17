@@ -572,7 +572,7 @@ const NHC = () => {
         <label>
           Financial situation (സാമ്പത്തിക അവസ്ഥ):
           <textarea
-            name="addmoregeneral"
+            name="financialsituation"
             value={formData.financialsituation}
             onChange={handleChange}
             rows="1"
