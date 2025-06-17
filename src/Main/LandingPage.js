@@ -6,27 +6,23 @@ import {
   FaUserNurse,
   FaHeartbeat,
   FaMobileAlt,
-  FaChalkboardTeacher,
   FaCheckCircle,
-  FaGooglePlay,
   FaFileMedical,
   FaClock,
   FaRobot,
   FaRegChartBar,
-  FaPlay,
-  FaApple
+ 
 } from "react-icons/fa";
 
 import logo from '../assets/img/logo-1.png';
 import successImage from '../assets/img/award.jpg';
-import successImage1 from '../assets/img/red.jpg';
 import "./LandingPage.css";
 
 const LandingPage = ({ isAuthenticated, isNurse }) => {
     const navigate = useNavigate();
     const [installPrompt, setInstallPrompt] = useState(null);
     const [isInstalled, setIsInstalled] = useState(false);
-    const [videoModalOpen, setVideoModalOpen] = useState(false);
+    
 
     useEffect(() => {
         const handleBeforeInstallPrompt = (event) => {
@@ -66,7 +62,7 @@ const LandingPage = ({ isAuthenticated, isNurse }) => {
         }
     };
 
-    const toggleVideoModal = () => setVideoModalOpen(!videoModalOpen);
+    
 
 const features = [
     {
@@ -210,57 +206,80 @@ const features = [
             </section>
 
             {/* Success Story Section */}
-<section className="success-section">
+<section className="success-stories">
     <div className="section-container">
-        <div className="section-header">
-            <h2 className="section-title">Our Pioneering Journey in Palliative Care</h2>
+        <div className="section-header center">
+            <h2>Transforming Palliative Care Through Innovation</h2>
             <p className="section-subtitle">
-                Where cutting-edge technology meets compassionate human care to transform lives
+                Our journey of blending technology with compassionate care
             </p>
         </div>
-        
-        <div className="success-content">
-            {/* Video Section */}
-            <div className="success-media">
-                <div className="success-image-container">
-                    <img src={successImage1} alt="Medical team launching the Neuraq mobile app for palliative care" className="success-image" />
-                    <button className="play-button" onClick={toggleVideoModal}>
-                        <FaPlay className="play-icon" />
-                    </button>
-                </div>
-            </div>
-            
-            <div className="success-text">
-                <h3 className="success-heading">Neuraq Technologies Launches Mobile App for Palliative Care</h3>
-                <div className="text-block">
-                    <p>
-                        On May 18, 2025, Neuraq Technologies launched a mobile application designed to enhance palliative care by streamlining patient management and reducing the burden on healthcare workers. The app simplifies communication and tracking, allowing doctors and nurses to dedicate more time to patient care.
-                    </p>
-                    <p>
-                        The application was officially launched during the “Arike” patient gathering by Makkaraparamba Palliative in the presence of Dr. P. Unni and was conducted by Muhammad Musthafa Tharayil, MD of Tharayil Business Group.
-                    </p>
-                </div>
-            </div>
-        </div>
 
-        {/* Additional Image Section */}
-        <div className="success-content">
-            <div className="success-media">
-                <div className="success-image-container">
-                    <img src={successImage} alt="Neuraq developers being honored at the Arike event" className="success-image" />
+        <div className="story-grid">
+            {/* Story 1 - App Launch */}
+            <div className="story-card">
+                <div className="story-media">
+                    <div className="video-wrapper">
+                        <iframe 
+                            src="https://www.youtube.com/embed/CQopDGLB2V0" 
+                            title="Neuraq App Launch" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowFullScreen
+                        ></iframe>
+                    </div>
+                </div>
+                <div className="story-content">
+                    <h3>Revolutionizing Patient Care</h3>
+                    <p>
+                        On May 18, 2025, Neuraq Technologies launched its mobile application at the "Arike" patient gathering, 
+                        transforming how palliative care is delivered in rural communities. The app streamlines patient management, 
+                        allowing healthcare workers to focus more on direct patient care.
+                    </p>
+                    <div className="story-highlight">
+                        <FaCheckCircle className="highlight-icon" />
+                        <span>Officially launched by Dr. P. Unni and Muhammad Musthafa Tharayil</span>
+                    </div>
                 </div>
             </div>
-            
-            <div className="success-text">
-                <div className="text-block">
-                    <h4 className="achievements-title">Recognizing Our Developers</h4>
-                    <p>
-                        During the same event, Makkaraparamba Palliative honored the Neuraq Technologies development team for their impactful contribution. The team received a memento as a token of appreciation for their role in delivering a transformative solution in healthcare through this mobile application.
-                    </p>
-                    <p>
-                        This moment marked a significant milestone in our journey, reaffirming our commitment to leveraging technology for compassionate care delivery in rural regions.
-                    </p>
+
+            {/* Story 2 - Team Recognition */}
+            <div className="story-card reverse">
+                <div className="story-media">
+                    <img src={successImage} alt="Neuraq team receiving award" className="story-image" />
                 </div>
+                <div className="story-content">
+                    <h3>Recognizing Excellence</h3>
+                    <p>
+                        The Neuraq development team was honored by Makkaraparamba Palliative for their groundbreaking work. 
+                        This recognition celebrates our commitment to creating technology solutions that make real differences 
+                        in patients' lives.
+                    </p>
+                    <div className="story-highlight">
+                        <FaCheckCircle className="highlight-icon" />
+                        <span>Received memento for impactful healthcare contribution</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Story 3 - Impact Video */}
+            <div className="story-card full-width">
+                <div className="story-media">
+                    <div className="video-wrapper">
+                        <iframe 
+                            src="https://www.youtube.com/embed/bWC2LIubqRQ" 
+                            title="Patient Impact Stories" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowFullScreen
+                        ></iframe>
+                    </div>
+                </div>
+                {/* <div className="story-content center">
+                    <h3>Hear From Those We've Helped</h3>
+                    <p>
+                        Watch how our technology has improved the quality of care for patients and eased the workload 
+                        for healthcare providers in rural communities.
+                    </p>
+                </div> */}
             </div>
         </div>
     </div>
@@ -268,27 +287,8 @@ const features = [
 
 
 
-            {/* Video Modal */}
-            {videoModalOpen && (
-                <div className="video-modal">
-                    <div className="modal-content">
-                        <button className="close-modal" onClick={toggleVideoModal}>
-                            &times;
-                        </button>
-                        <div className="video-container">
-                            <iframe 
-                                width="560" 
-                                height="315" 
-                                src="https://youtu.be/74DWwSxsVSs?si=x3kLYXcQPLhrw2-q" 
-                                title="YouTube video player" 
-                                frameBorder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowFullScreen
-                            ></iframe>
-                        </div>
-                    </div>
-                </div>
-            )}
+
+         
         </div>
     );
 };
