@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { FaFilter, FaFileExcel, FaArrowLeft, FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 import * as XLSX from "xlsx";
 
-
 const PatientTable = () => {
   // State management
   const [patients, setPatients] = useState([]);
