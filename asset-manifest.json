@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/pmkba.neuraq.in/static/css/main.389fc1cb.css",
-    "main.js": "/pmkba.neuraq.in/static/js/main.6fcd78d2.js",
-    "static/js/239.6e0b9c23.chunk.js": "/pmkba.neuraq.in/static/js/239.6e0b9c23.chunk.js",
-    "static/js/213.3088029c.chunk.js": "/pmkba.neuraq.in/static/js/213.3088029c.chunk.js",
-    "static/js/455.b93efc79.chunk.js": "/pmkba.neuraq.in/static/js/455.b93efc79.chunk.js",
-    "static/media/award.jpg": "/pmkba.neuraq.in/static/media/award.5718a58712773c6e4de1.jpg",
-    "static/media/red.jpg": "/pmkba.neuraq.in/static/media/red.66c6826500fcb2323986.jpg",
-    "static/media/home-banner-nurse.jpg": "/pmkba.neuraq.in/static/media/home-banner-nurse.4187a4847bd8808a8794.jpg",
-    "static/media/logo-1.png": "/pmkba.neuraq.in/static/media/logo-1.c2a307f96ab58e7da2cc.png",
-    "index.html": "/pmkba.neuraq.in/index.html",
-    "main.389fc1cb.css.map": "/pmkba.neuraq.in/static/css/main.389fc1cb.css.map",
-    "main.6fcd78d2.js.map": "/pmkba.neuraq.in/static/js/main.6fcd78d2.js.map",
-    "239.6e0b9c23.chunk.js.map": "/pmkba.neuraq.in/static/js/239.6e0b9c23.chunk.js.map",
-    "213.3088029c.chunk.js.map": "/pmkba.neuraq.in/static/js/213.3088029c.chunk.js.map",
-    "455.b93efc79.chunk.js.map": "/pmkba.neuraq.in/static/js/455.b93efc79.chunk.js.map"
+    "main.css": "/neuraq-care-mkba-og-001/static/css/main.ac656a49.css",
+    "main.js": "/neuraq-care-mkba-og-001/static/js/main.5aaca724.js",
+    "static/js/239.6e0b9c23.chunk.js": "/neuraq-care-mkba-og-001/static/js/239.6e0b9c23.chunk.js",
+    "static/js/213.3088029c.chunk.js": "/neuraq-care-mkba-og-001/static/js/213.3088029c.chunk.js",
+    "static/js/455.b93efc79.chunk.js": "/neuraq-care-mkba-og-001/static/js/455.b93efc79.chunk.js",
+    "static/media/award.jpg": "/neuraq-care-mkba-og-001/static/media/award.5718a58712773c6e4de1.jpg",
+    "static/media/red.jpg": "/neuraq-care-mkba-og-001/static/media/red.66c6826500fcb2323986.jpg",
+    "static/media/home-banner-nurse.jpg": "/neuraq-care-mkba-og-001/static/media/home-banner-nurse.4187a4847bd8808a8794.jpg",
+    "static/media/logo-1.png": "/neuraq-care-mkba-og-001/static/media/logo-1.c2a307f96ab58e7da2cc.png",
+    "index.html": "/neuraq-care-mkba-og-001/index.html",
+    "main.ac656a49.css.map": "/neuraq-care-mkba-og-001/static/css/main.ac656a49.css.map",
+    "main.5aaca724.js.map": "/neuraq-care-mkba-og-001/static/js/main.5aaca724.js.map",
+    "239.6e0b9c23.chunk.js.map": "/neuraq-care-mkba-og-001/static/js/239.6e0b9c23.chunk.js.map",
+    "213.3088029c.chunk.js.map": "/neuraq-care-mkba-og-001/static/js/213.3088029c.chunk.js.map",
+    "455.b93efc79.chunk.js.map": "/neuraq-care-mkba-og-001/static/js/455.b93efc79.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.389fc1cb.css",
-    "static/js/main.6fcd78d2.js"
+    "static/css/main.ac656a49.css",
+    "static/js/main.5aaca724.js"
   ]
 }
